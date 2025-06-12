@@ -1,0 +1,45 @@
+<!-- Account Profile View: Displays and allows updating of the user's profile information using AJAX. -->
+@model WebApp.ViewModels.UserProfileViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h2 class="text-white">User Profile</h2>
+
+<form id="profileForm">
+    <input type="hidden" id="Username" value="@Model.Username" />
+    <div>
+        <label class="text-white">Email</label>
+        <input type="email" id="Email" value="@Model.Email" class="form-control w-auto d-inline-block" />
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Update Profile</button>
+</form>
+
+<div id="message" style="margin-top: 10px;"></div>
+
+@section Scripts {
+<script>
+    document.getElementById("profileForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const model = {
+            Username: document.getElementById("Username").value,
+            Email: document.getElementById("Email").value
+        };
+
+        const response = await fetch("/Account/UpdateProfile", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(model)
+        });
+
+        const result = await response.json();
+        const msg = document.getElementById("message");
+        msg.textContent = result.message;
+        msg.style.color = result.success ? "green" : "red";
+    });
+</script>
+}

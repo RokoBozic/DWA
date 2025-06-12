@@ -1,0 +1,119 @@
+@model WebApp.ViewModels.ProductEditViewModel
+@{
+    ViewData["Title"] = "Edit Product";
+}
+
+<!-- Product Edit View: Displays a form to edit an existing product, with fields for name, description, price, image URL, and country selection. Includes client-side validation and AJAX submission. -->
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card bg-dark text-white">
+                <div class="card-header">
+                    <h2 class="mb-0">Edit Product</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post" id="editProductForm">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <input type="hidden" asp-for="Id" />
+                        
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Name:</label>
+                            <input asp-for="Name" class="form-control bg-dark text-white" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Description:</label>
+                            <textarea asp-for="Description" class="form-control bg-dark text-white" rows="3"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Price" class="form-label">Price:</label>
+                            <input asp-for="Price" class="form-control bg-dark text-white" type="number" step="0.01" min="0.01" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl" class="form-label">Image URL:</label>
+                            <input asp-for="ImageUrl" class="form-control bg-dark text-white" />
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="CountryId" class="form-label">Country:</label>
+                            <select asp-for="CountryId" class="form-select bg-dark text-white">
+                                <option value="">-- Select Country --</option>
+                                @foreach (var country in ViewBag.Countries)
+                                {
+                                    <option value="@country.Id">@country.Name</option>
+                                }
+                            </select>
+                            <span asp-validation-for="CountryId" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <i class="fas fa-save"></i> Save
+                            </button>
+                            <a href="/Product" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to List
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var form = $('#editProductForm');
+            form.on('submit', function(e) {
+                e.preventDefault();
+                if (!$(this).valid()) {
+                    return false;
+                }
+                var formData = $(this).serialize();
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            window.location.href = '/Product';
+                        } else {
+                            var errorHtml = '<div class="alert alert-danger">';
+                            if (response.errors && response.errors.length > 0) {
+                                response.errors.forEach(function(error) {
+                                    errorHtml += '<p>' + error + '</p>';
+                                });
+                            } else {
+                                errorHtml += '<p>An error occurred while updating the product.</p>';
+                            }
+                            errorHtml += '</div>';
+                            $('.alert').remove();
+                            form.prepend(errorHtml);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        var errorHtml = '<div class="alert alert-danger">';
+                        errorHtml += '<p>An error occurred while updating the product. Please try again.</p>';
+                        errorHtml += '</div>';
+                        $('.alert').remove();
+                        form.prepend(errorHtml);
+                    }
+                });
+            });
+            $.validator.unobtrusive.parse(form);
+        });
+    </script>
+}

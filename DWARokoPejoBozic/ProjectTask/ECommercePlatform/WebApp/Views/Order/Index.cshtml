@@ -1,0 +1,41 @@
+@model List<WebApp.ViewModels.OrderViewModel>
+@{
+    ViewData["Title"] = "All Orders";
+}
+
+<!-- Order Index View: Displays a list of all orders, including user, product, country, quantity, price, and order date. -->
+
+<div class="container mt-4">
+    <h2 class="text-white mb-4">All Orders</h2>
+    <div class="card bg-dark text-white">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Product</th>
+                            <th>Country</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Order Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+                                <td>@order.Username</td>
+                                <td>@order.ProductName</td>
+                                <td>@order.CountryName</td>
+                                <td>@order.Quantity</td>
+                                <td>$@order.Price.ToString("F2")</td>
+                                <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div> 

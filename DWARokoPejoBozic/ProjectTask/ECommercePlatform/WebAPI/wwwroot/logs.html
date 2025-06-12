@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Logs</title>
+</head>
+<body>
+    <h2>View Logs</h2>
+    <label>Show last:
+        <select id="logCount">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+        </select>
+    </label>
+    <button onclick="loadLogs()">Load Logs</button>
+    <button onclick="logout()">Logout</button>
+    <pre id="logsDisplay"></pre>
+
+    <script>
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+
+        async function loadLogs() {
+            const token = localStorage.getItem('token');
+            const count = document.getElementById('logCount').value;
+
+            const response = await fetch('http://localhost:5033/api/logs/get/' + count, {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+
+            if (response.ok) {
+                const logs = await response.json();
+                document.getElementById('logsDisplay').textContent = JSON.stringify(logs, null, 2);
+            } else {
+                document.getElementById('logsDisplay').textContent = "Unauthorized or error occurred.";
+            }
+        }
+    </script>
+</body>
+</html>

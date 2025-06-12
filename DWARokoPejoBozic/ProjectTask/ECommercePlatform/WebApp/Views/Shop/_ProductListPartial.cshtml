@@ -1,0 +1,20 @@
+@model WebApp.ViewModels.ProductListViewModel
+
+<!-- Shop _ProductListPartial View: Displays a partial view of products, used for AJAX updates in the Shop Index view. -->
+
+<table class="table table-dark table-striped text-white">
+    <thead>
+        <tr><th>Product</th><th>Price</th><th>Country</th><th></th></tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Products)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.Price</td>
+            <td>@item.CountryName</td>
+            <td><a href="/Shop/Details/@item.Id" class="btn btn-info btn-sm text-white">Details</a></td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <h2>Login</h2>
+    <form id="loginForm">
+        <label>Username: <input type="text" id="username" required></label><br><br>
+        <label>Password: <input type="password" id="password" required></label><br><br>
+        <button type="submit">Login</button>
+    </form>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            console.log('Login form submitted');
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            console.log('Attempting login for username:', username);
+
+            try {
+                const response = await fetch('http://localhost:5033/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, passwordHash: password, email: '', role: '' })
+                });
+                console.log('Response status:', response.status);
+
+                const result = await response.json();
+                console.log('Response:', result);
+
+                if (response.ok) {
+                    localStorage.setItem('token', result.token);
+                    window.location.href = 'logs.html';
+                } else {
+                    alert(result);
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Error during login: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

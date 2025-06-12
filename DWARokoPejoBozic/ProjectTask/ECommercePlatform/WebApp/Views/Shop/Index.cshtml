@@ -1,0 +1,31 @@
+@model WebApp.ViewModels.ProductListViewModel
+@{
+    ViewData["Title"] = "Shop";
+}
+
+<!-- Shop Index View: Displays a list of products with search and country filtering. Uses AJAX for dynamic updates. -->
+
+<h2 class="text-white">Shop</h2>
+
+<form id="filterForm" class="mb-3">
+    <input type="text" name="searchTerm" placeholder="Search by name" value="@Model.SearchTerm" class="form-control d-inline-block w-auto me-2" />
+    <select name="countryId" class="form-select d-inline-block w-auto me-2">
+        <option value="">All Countries</option>
+        @foreach (var country in Model.Countries)
+        {
+            <option value="@country.Id" selected="@(country.Id == Model.CountryId ? "selected" : null)">@country.Name</option>
+        }
+    </select>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<div id="productList" class="text-white">
+    @await Html.PartialAsync("_ProductListPartial", Model)
+</div>
+
+<div id="pagination"></div>
+
+@section Scripts {
+    <script src="~/js/shop-pagination.js" asp-append-version="true"></script>
+}
+

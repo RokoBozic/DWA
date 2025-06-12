@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebApp</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebApp.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+            <div class="container-fluid">
+                @if (User.IsInRole("Admin"))
+                {
+                    <a class="navbar-brand fw-bold text-light" href="/Product">Admin Panel</a>
+                }
+                else
+                {
+                    <a class="navbar-brand fw-bold text-light" href="/Shop">E-Commerce</a>
+                }
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item"><a class="nav-link text-light" href="/Product">Products</a></li>
+                            <li class="nav-item"><a class="nav-link text-light" href="/Country">Countries</a></li>
+                            <li class="nav-item"><a class="nav-link text-light" href="/Tag">Tags</a></li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a class="nav-link text-light" href="/Shop">Shop</a></li>
+                            <li class="nav-item"><a class="nav-link text-light" href="/Order/MyOrders">My Orders</a></li>
+                        }
+                    </ul>
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        @if (Context.User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item"><a class="nav-link text-light" href="/Profile">Profile</a></li>
+                            <li class="nav-item"><a class="nav-link text-light" href="/Account/Logout">Logout</a></li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a class="nav-link text-light" href="/Account/Login">Login</a></li>
+                            <li class="nav-item"><a class="nav-link text-light" href="/Account/Register">Register</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container py-4 bg-dark text-white rounded-3">
+        <main role="main" class="pb-3 text-white">
+            @RenderBody()
+        </main>
+    </div>
+    <footer class="footer bg-dark text-center py-3 mt-auto border-top border-secondary text-white">
+        <div class="container">
+            <span class="text-secondary">&copy; 2025 - E-Commerce Platform</span>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

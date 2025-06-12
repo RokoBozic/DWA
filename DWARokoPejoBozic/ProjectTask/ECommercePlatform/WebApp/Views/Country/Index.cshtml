@@ -1,0 +1,53 @@
+<!-- Country Index View: Displays a list of all countries with options to add, edit, or delete countries. -->
+@model IEnumerable<WebApp.Models.Country>
+@{
+    ViewData["Title"] = "Country List";
+}
+
+<div class="container mt-4">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-white">Country List</h2>
+        <a href="/Country/Create" class="btn btn-success">
+            <i class="fas fa-plus"></i> Add New Country
+        </a>
+    </div>
+
+    <div class="card bg-dark text-white">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td class="text-end">
+                                    <a href="/Country/Edit/@item.Id" class="btn btn-warning btn-sm me-2">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a href="/Country/Delete/@item.Id" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

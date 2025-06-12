@@ -1,0 +1,57 @@
+<!-- Profile Index View: Displays and allows updating of the current user's profile information using AJAX. -->
+@model WebApp.ViewModels.UserProfileViewModel
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h2 class="text-white mb-4">Your Profile</h2>
+            <div class="card bg-dark text-white">
+                <div class="card-body">
+                    <form id="profileForm">
+                        <div class="mb-3">
+                            <label class="form-label">Username:</label>
+                            <input type="text" class="form-control" value="@Model.Username" disabled />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email:</label>
+                            <input type="email" name="Email" value="@Model.Email" class="form-control" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                    <div id="resultMessage" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#profileForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                var formData = {
+                    Username: '@Model.Username',
+                    Email: $('input[name="Email"]').val()
+                };
+
+                $.ajax({
+                    url: '@Url.Action("Update", "Profile")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    success: function(response) {
+                        $('#resultMessage').html('<div class="alert alert-success">' + response.message + '</div>');
+                    },
+                    error: function() {
+                        $('#resultMessage').html('<div class="alert alert-danger">An error occurred while updating your profile.</div>');
+                    }
+                });
+            });
+        });
+    </script>
+}
